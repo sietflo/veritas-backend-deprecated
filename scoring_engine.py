@@ -6,12 +6,46 @@ import pdfplumber
 from sklearn.metrics.pairwise import cosine_similarity
 
 SKILLS = [
-    "python", "fastapi", "django", "flask",
-    "postgresql", "mysql",
-    "docker", "kubernetes",
-    "aws", "azure",
-    "machine learning", "scikit-learn",
-    "react", "typescript"
+    "python", "javascript", "typescript", "java", "c++", 
+    "c#", "ruby", "php", "go", "rust", 
+    "swift", "kotlin", "scala", "r", "perl",
+    
+    # Web Development (Frontend & Backend)
+    "html5", "css3", "sass", "react", "angular", 
+    "vue.js", "next.js", "svelte", "nodejs", "express.js", 
+    "django", "flask", "fastapi", "spring boot", "laravel", 
+    "asp.net", "graphql", "rest api", "webassembly",
+    
+    # Cloud & DevOps
+    "aws", "azure", "gcp", "docker", "kubernetes", 
+    "jenkins", "github actions", "gitlab ci", "terraform", "ansible", 
+    "puppet", "chef", "linux", "bash", "powershell",
+    
+    # Databases & Data Storage
+    "mysql", "postgresql", "mongodb", "redis", "sqlite", 
+    "oracle", "microsoft sql server", "cassandra", "dynamodb", "neo4j", 
+    "elasticsearch", "firebase",
+    
+    # Data Science, AI & Machine Learning
+    "machine learning", "deep learning", "artificial intelligence", "data analytics", "pandas", 
+    "numpy", "scikit-learn", "tensorflow", "pytorch", "keras", 
+    "apache spark", "hadoop", "tableau", "power bi",
+    
+    # Mobile & Desktop Development
+    "flutter", "react native", "xamarin", "ionic", "electron",
+    
+    # Cybersecurity & Networking
+    "cybersecurity", "penetration testing", "ethical hacking", "wireshark", "splunk", 
+    "firewalls", "cryptography", "network security", "tcp/ip", "dns",
+    
+    # Methodologies, Tools & Practices
+    "git", "github", "gitlab", "bitbucket", "agile", 
+    "scrum", "kanban", "ci/cd", "devops", "devsecops", 
+    "test-driven development", "unit testing", "jira", "confluence",
+    
+    # Systems, Architecture & UI/UX
+    "microservices", "serverless", "system design", "ui/ux design", "figma", 
+    "enterprise architecture", "itil", "project management"
 ]
 
 # Завантажуємо модель один раз при імпорті модуля
