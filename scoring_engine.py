@@ -5,7 +5,7 @@ import joblib
 import pdfplumber
 from sklearn.metrics.pairwise import cosine_similarity
 
-#Хардкодинг
+#Хардкодинг скілів
 
 SKILLS = [
     # Languages
