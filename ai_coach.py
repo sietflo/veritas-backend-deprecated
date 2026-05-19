@@ -1,4 +1,5 @@
 import os
+import time
 import json
 from dotenv import load_dotenv
 from google import genai
@@ -54,24 +55,34 @@ def get_ai_coaching_report(scoring_payload: dict) -> dict:
     2. Пиши мовою резюме кандидата.
     """
 
-    try:
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',  # залишаємо вказану тобою модель
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.3
+    for attempt in range(3):  # Робимо максимум 3 спроби
+        try:
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    temperature=0.3
+                )
             )
-        )
-        return json.loads(response.text)
-
-    except Exception as e:
-        print(f"Помилка при виклику Gemini API: {e}")
-        return {
-            "verdict": "Не вдалося отримати автоматичний аналіз від ШІ.",
-            "strengths": [],
-            "improvements": []
-        }
+            return json.loads(response.text)
+            
+        except Exception as e:
+            error_msg = str(e)
+            # Якщо помилка 503 і це ще не остання спроба - чекаємо і повторюємо
+            if "503" in error_msg and attempt < 2:
+                print(f"Gemini API перевантажено (503). Спроба {attempt + 1} з 3. Пауза 2 сек...")
+                time.sleep(2)
+                continue  # Йдемо на наступне коло циклу
+            
+            # Якщо це інша помилка (наприклад, 400) або спроби закінчилися:
+            print(f"Помилка Gemini API: {error_msg}")
+            # Повертаємо безпечну заглушку, щоб фронтенд не впав і показав хоч щось
+            return {
+                "verdict": "ШІ-сервери Google зараз недоступні. Ми проаналізували ваше резюме математично (див. ATS Score), але для текстових порад спробуйте ще раз за хвилину.",
+                "strengths": [],
+                "improvements": []
+            }
 
 
 def run_full_pipeline(job_text: str, cv_pdf_bytes: bytes) -> dict:
