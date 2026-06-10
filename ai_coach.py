@@ -96,7 +96,7 @@ def run_full_pipeline(job_text: str, cv_pdf_bytes: bytes) -> dict:
     # Етап 2: Запитуємо ШІ
     ai_report = get_ai_coaching_report(scoring_payload)
 
-    # Етап 3: Формуємо фінальний "супер-JSON" для фронтенду
+    # Етап 3: Формуємо фінальний "JSON" для фронтенду
     final_response = {
         "ats_score": min(scoring_payload["ats_score"] + 20.0, 100.0), # +20 для гарнішого балу на фронтенді, вище 100 не буде 
         "missing_skills": scoring_payload["missing_skills"],
@@ -104,25 +104,3 @@ def run_full_pipeline(job_text: str, cv_pdf_bytes: bytes) -> dict:
         "ai_coaching": ai_report
     }
     return final_response
-
-
-# ==========================================
-# ЛОКАЛЬНИЙ ТЕСТ ДЛЯ ПЕРЕВІРКИ!!!
-# ==========================================
-if __name__ == "__main__":
-    # Тестова вакансія
-    test_job = """We need a Python developer with experience in FastAPI, PostgreSQL, and Machine Learning. Must know scikit-learn and Docker. Experience with AWS is a plus."""
-
-    # Емулюємо зчитування реального файлу у байти для тесту
-    try:
-        with open("test_cv.pdf", "rb") as f:
-            file_bytes = f.read()
-
-        print("⏳ Запуск повного конвеєра (ML + Gemini)...")
-        final_output = run_full_pipeline(test_job, file_bytes)
-
-        print("\n🎉 ВСЕ ПРАЦЮЄ! Фінальна відповідь для Фронтенду:")
-        print(json.dumps(final_output, indent=2, ensure_ascii=False))
-
-    except FileNotFoundError:
-        print("❌ Для тесту потрібен файл CV_Medium_Fit.pdf в цій же папці.")
