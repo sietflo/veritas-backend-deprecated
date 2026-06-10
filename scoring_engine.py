@@ -5,7 +5,7 @@ import joblib
 import pdfplumber
 from sklearn.metrics.pairwise import cosine_similarity
 
-#Хардкодинг скілів
+#"Хардкодинг" скілів
 
 SKILLS = [
     # Languages
@@ -51,7 +51,7 @@ SKILLS = [
     "enterprise architecture", "itil", "project management"
 ]
 
-# Завантажуємо модель один раз при імпорті модуля
+# Завантажуємо модель TF-IDF один раз при імпорті модуля
 try:
     vectorizer = joblib.load('tf-idf.pkl')
 except Exception as e:
@@ -61,7 +61,7 @@ except Exception as e:
 
 def extract_pdf_text_from_bytes(pdf_bytes: bytes) -> str:
     """
-    Приймає сирі байти файлу PDF (ідеально для FastAPI)
+    Приймає сирі байти файлу PDF
     та повертає очищений текст.
     """
     try:
@@ -82,6 +82,9 @@ def extract_pdf_text_from_bytes(pdf_bytes: bytes) -> str:
 
 
 def extract_skills(text: str) -> set:
+    """
+    Витягує слова-навички з тексту згідно списку вище
+    """
     text = text.lower()
     found = []
     for skill in SKILLS:
@@ -92,6 +95,10 @@ def extract_skills(text: str) -> set:
 
 
 def skill_score(job_text: str, cv_text: str) -> float:
+    """
+    Функція для обрахунку коефіцієнта навичок які є у кандидата
+    порівняно з вакансією для чеснішого фінального обрахунку фінального score
+    """
     job_skills = extract_skills(job_text)
     cv_skills = extract_skills(cv_text)
     if not job_skills:
@@ -129,7 +136,7 @@ def calculate_ats_metrics(job_text: str, cv_pdf_bytes: bytes) -> dict:
     cv_skills = extract_skills(cv_text)
     missing = sorted(list(job_skills - cv_skills))  # Перетворюємо в list для сумісності з JSON
 
-    # Логіка анти-чіту
+    # Логіка перевірки на "keyword matching"
     matched = job_skills & cv_skills
     warn = ""
     if final_score >= 75 and matched == job_skills:
