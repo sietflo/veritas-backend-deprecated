@@ -20,7 +20,7 @@ client = genai.Client(api_key=api_key)
 def get_ai_coaching_report(scoring_payload: dict) -> dict:
     """
     Приймає готові метрики, надсилає в Gemini
-    і повертає структурованные поради як Python-словник.
+    і повертає структуровані поради як Python-словник.
     """
     input_data_str = json.dumps(scoring_payload, indent=2, ensure_ascii=False)
 
@@ -62,7 +62,7 @@ def get_ai_coaching_report(scoring_payload: dict) -> dict:
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
-                    temperature=0.3
+                    temperature=0.3 #низька температура для професійнішого тону без художніх прикрас і вигадок
                 )
             )
             return json.loads(response.text)
@@ -98,7 +98,7 @@ def run_full_pipeline(job_text: str, cv_pdf_bytes: bytes) -> dict:
 
     # Етап 3: Формуємо фінальний "JSON" для фронтенду
     final_response = {
-        "ats_score": min(scoring_payload["ats_score"] + 20.0, 100.0), # +20 для гарнішого балу на фронтенді, вище 100 не буде 
+        "ats_score": min(scoring_payload["ats_score"] + 20.0, 100.0), # +20 для "гарнішого" балу на фронтенді, вище 100 не буде z
         "missing_skills": scoring_payload["missing_skills"],
         "warning": scoring_payload["warning"],
         "ai_coaching": ai_report
