@@ -1,4 +1,4 @@
-# ⚠️ DEPRECATED — ai-veritas-backend
+# ⚠️ DEPRECATED — veritas-backend
 
 **This repository is now archived and no longer maintained.**
 
